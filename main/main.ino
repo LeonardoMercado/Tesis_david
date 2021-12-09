@@ -45,7 +45,7 @@ void loop(){
     delay(delay_disparos);                            // Espera el tiempo de delay.
     digitalWrite(disparo_2,HIGH);                     // Pone el disparo 2 (GPIO-3) en alto.
     //Serial.println("d2:1");                           // Para Debug.
-    int interDelay = delay_disparos-tiempo_disparo_1; // Calcula el tiempo inter-delay.
+    int interDelay = tiempo_disparo_1-delay_disparos; // Calcula el tiempo inter-delay.
     delay(interDelay);                                // Espera el tiempo inter-delay.
     digitalWrite(disparo,LOW);                        // Pone el disparo (GPIO-2) en bajo.
     //Serial.println("d1:0");                           // Para Debug.
