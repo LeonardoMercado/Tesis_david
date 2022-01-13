@@ -2,7 +2,7 @@
  * 
  * Autor: Leonardo Fabio Mercado Benítez.
  * 
- * Versión: 0.2
+ * Versión: 0.2b
  * 
  * Conexiones: 
  *  - Pin D2: Salida de control para el driver del IGBT 1.
@@ -37,27 +37,47 @@ void setup(){
 }
 
 void loop(){
-  Datos();                                            // Llamada a la función Datos().
-  if(objetivo == "d"){                                // Si el objetivo enviado en la cadena es d.
-    digitalWrite(led,HIGH);                           // Enciende el led integrado en el micro.
-    digitalWrite(disparo,HIGH);                       // Pone el disparo (GPIO-2) en alto.
-    //Serial.println("d1:1");                           // Para Debug.
-    delay(delay_disparos);                            // Espera el tiempo de delay.
-    digitalWrite(disparo_2,HIGH);                     // Pone el disparo 2 (GPIO-3) en alto.
-    //Serial.println("d2:1");                           // Para Debug.
-    int interDelay = abs(tiempo_disparo_1-delay_disparos); // Calcula el tiempo inter-delay.
-    delay(interDelay);                                // Espera el tiempo inter-delay.
-    digitalWrite(disparo,LOW);                        // Pone el disparo (GPIO-2) en bajo.
-    //Serial.println("d1:0");                           // Para Debug.
-    int interLamda2 = abs(tiempo_disparo_2-interDelay);    // Calcula el tiempo inter-lambda2.
-    delay(interLamda2);                               // Espera el tiempo inter-lambda2.
-    digitalWrite(disparo_2,LOW);                      // Pone el disparo 2 (GPIO-3) en bajo.
-    //Serial.println("d2:0");                           // Para Debug.
-    digitalWrite(led,LOW);                            // Apga el led integrado en el micro.
+  Datos();                                                               // Llamada a la función Datos().
+  if(objetivo == "d"){                                                   // Si el objetivo enviado en la cadena es d.
+    int interDelay = abs(tiempo_disparo_1-delay_disparos);               // Calcula el tiempo inter-delay.
+    int interLamda2 = (tiempo_disparo_2+delay_disparos)-tiempo_disparo_1;// Calcula el tiempo inter-lambda2.
+    if(tiempo_disparo_1 >= delay_disparos && interLamda2 >= 0){          // Si las restricciones del modelo se cumplen
+      digitalWrite(led,HIGH);                             // Enciende el led integrado en el micro.
+      digitalWrite(disparo,HIGH);                         // Pone el disparo (GPIO-2) en alto.
+      //Serial.println("d1:1");                           // Para Debug.
+      delay(delay_disparos);                              // Espera el tiempo de delay.
+      digitalWrite(disparo_2,HIGH);                       // Pone el disparo 2 (GPIO-3) en alto.
+      //Serial.println("d2:1");                           // Para Debug.      
+      delay(interDelay);                                  // Espera el tiempo inter-delay.
+      digitalWrite(disparo,LOW);                          // Pone el disparo (GPIO-2) en bajo.
+      //Serial.println("d1:0");                           // Para Debug.
+      int interLamda2 = abs(tiempo_disparo_2-interDelay); // Calcula el tiempo inter-lambda2.
+      delay(interLamda2);                                 // Espera el tiempo inter-lambda2.
+      digitalWrite(disparo_2,LOW);                        // Pone el disparo 2 (GPIO-3) en bajo.
+      //Serial.println("d2:0");                           // Para Debug.
+      digitalWrite(led,LOW);                              // Apga el led integrado en el micro.          
+    }else{  // Si las restricciones del modelo no se cumplen.
+      digitalWrite(led,HIGH); // Enciende el led integrado en el micro.
+      delay(250);             // Espera 500 milisegundos.
+      digitalWrite(led,LOW);  // Apga el led integrado en el micro.  
+      delay(250);             // Espera 500 milisegundos. 
+      digitalWrite(led,HIGH); // Enciende el led integrado en el micro.
+      delay(250);             // Espera 500 milisegundos.
+      digitalWrite(led,LOW);  // Apga el led integrado en el micro.
+      delay(250);             // Espera 500 milisegundos. 
+      digitalWrite(led,HIGH); // Enciende el led integrado en el micro.
+      delay(250);             // Espera 500 milisegundos.
+      digitalWrite(led,LOW);  // Apga el led integrado en el micro.  
+      delay(250);             // Espera 500 milisegundos. 
+      digitalWrite(led,HIGH); // Enciende el led integrado en el micro.
+      delay(250);             // Espera 500 milisegundos.
+      digitalWrite(led,LOW);  // Apga el led integrado en el micro.
+      delay(250);             // Espera 500 milisegundos.   
+    }    
     objetivo = "";                                    // Limpia el objetivo.
     tiempo_disparo_1 = 0;                             // Limpia el tiempo de disparo 1.
     delay_disparos = 0;                               // Limpia el tiempo de delay.
-    tiempo_disparo_2 = 0;                             // Limpia el tiempo de disparo 2.
+    tiempo_disparo_2 = 0;                             // Limpia el tiempo de disparo 2.    
   }
      
 }
@@ -87,9 +107,9 @@ void recibirMensaje(){
     tiempo_disparo_1 = valor_auxiliar_1.toInt();                            // Convierte el valor del tiempo de disparo 1 en entero.
     delay_disparos = valor_auxiliar_2.toInt();                              // Convierte el valor del tiempo de delay entre disparos en entero.
     tiempo_disparo_2 = valor_auxiliar_3.toInt();                            // Convierte el valor del tiempo de disparo 2 en entero.
-    Serial.println(objetivo);                                               // Para debug - Comprobación del objeto recibido.
-    Serial.println(tiempo_disparo_1);                                       // Para debug - Comprobación del tiempo de disparo 1 recibido.
-    Serial.println(delay_disparos);                                         // Para debug - Comprobación del tiempo de delay recibido.
-    Serial.println(tiempo_disparo_2);                                       // Para debug - Comprobación del tiempo de disparo 2 recibido.
+    //Serial.println(objetivo);                                               // Para debug - Comprobación del objeto recibido.
+    //Serial.println(tiempo_disparo_1);                                       // Para debug - Comprobación del tiempo de disparo 1 recibido.
+    //Serial.println(delay_disparos);                                         // Para debug - Comprobación del tiempo de delay recibido.
+    //Serial.println(tiempo_disparo_2);                                       // Para debug - Comprobación del tiempo de disparo 2 recibido.
   }
 }
